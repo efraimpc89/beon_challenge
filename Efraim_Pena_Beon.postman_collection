@@ -1,0 +1,283 @@
+{
+	"info": {
+		"_postman_id": "aba83904-260a-4c3d-bbcf-21c8646b0312",
+		"name": "Beon",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4547980"
+	},
+	"item": [
+		{
+			"name": "1.- Get Users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{base_url}}/api/{{users_endpoint}}",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"{{users_endpoint}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2.- Validate a 200 response Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{base_url}}/api/{{users_endpoint}}",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"{{users_endpoint}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3.- Check if array of users is contained",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Check if array of users is contained\", function () {\r",
+							"    \r",
+							"    pm.expect(jsonData.data).to.be.an('array')\r",
+							"});\r",
+							"\r",
+							"let IDs = jsonData.data.map(obj => obj.id); \r",
+							"let first_names = jsonData.data.map(obj => obj.first_name); \r",
+							"let last_names = jsonData.data.map(obj => obj.last_name); \r",
+							"let emails = jsonData.data.map(obj => obj.email); \r",
+							"\r",
+							"console.log(IDs);\r",
+							"console.log(first_names);\r",
+							"console.log(last_names);\r",
+							"console.log(emails);\r",
+							"\r",
+							"function hasDuplicates(array) {\r",
+							"    return (new Set(array)).size !== array.length;\r",
+							"}\r",
+							"\r",
+							"pm.test(\"Check unique values\", () => {\r",
+							"    pm.expect(hasDuplicates(IDs)).to.equal(false);\r",
+							"    pm.expect(hasDuplicates(first_names)).to.equal(false);\r",
+							"    pm.expect(hasDuplicates(last_names)).to.equal(false);\r",
+							"    pm.expect(hasDuplicates(emails)).to.equal(false);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{base_url}}/api/{{users_endpoint}}",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"{{users_endpoint}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4.- Extract id and store as variable",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"jsonData.data[0].id\r",
+							"console.log(jsonData.data[0].id)\r",
+							"pm.globals.set(\"first_id\",  jsonData.data[0].id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{base_url}}/api/{{users_endpoint}}",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"{{users_endpoint}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5,6,7.- GET request to extracted ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Id is 1\", function () {\r",
+							"    pm.expect(jsonData.data.id).to.eql(1);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"email is george.bluth@reqres.in\", function () {\r",
+							"    pm.expect(jsonData.data.email).to.eql(\"george.bluth@reqres.in\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"first_name is George\", function () {\r",
+							"    pm.expect(jsonData.data.first_name).to.eql(\"George\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"last_name is Bluth\", function () {\r",
+							"    pm.expect(jsonData.data.last_name).to.eql(\"Bluth\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"avatar is https://reqres.in/img/faces/1-image.jpg\", function () {\r",
+							"    pm.expect(jsonData.data.avatar).to.eql(\"https://reqres.in/img/faces/1-image.jpg\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{base_url}}/api/{{users_endpoint}}/{{first_id}}",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"{{users_endpoint}}",
+						"{{first_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "8, 9, 10.- Create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"email is efra@reqres.in\", function () {\r",
+							"    pm.expect(jsonData.data.email).to.eql(\"efra@reqres.in\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"first_name is Efraim\", function () {\r",
+							"    pm.expect(jsonData.data.first_name).to.eql(\"Efraim\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"last_name is Peña\", function () {\r",
+							"    pm.expect(jsonData.data.last_name).to.eql(\"Peña\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"avatar is https://reqres.in/img/faces/1-image.jpg\", function () {\r",
+							"    pm.expect(jsonData.data.avatar).to.eql(\"https://reqres.in/img/faces/example.jpg\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"efra@reqres.in\",\r\n    \"first_name\": \"Efraim\",\r\n    \"last_name\": \"Peña\",\r\n    \"avatar\": \"https://reqres.in/img/faces/example.jpg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{base_url}}/api/{{users_endpoint}}",
+					"protocol": "https",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"{{users_endpoint}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "first_id",
+			"value": ""
+		}
+	]
+}
